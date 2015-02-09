@@ -127,8 +127,9 @@ module PeriodicCalculations
       relation_query = relation_query.group(<<-SQL)
         date_trunc(:unit, #{@relation.table_name}.#{@timestamp_column} + INTERVAL :offset)
       SQL
-
-      relation_query.to_sql
+      ActiveRecord::Base.connection.unprepared_statement do
+        relation_query.to_sql
+      end
     end
 
   end
